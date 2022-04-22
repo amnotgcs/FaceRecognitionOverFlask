@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}{% endblock %} - 生物身份验证</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+    <link href="https://fonts.googleapis.com/css?family=Ropa+Sans" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+</head>
+<body>
+    <!-- 网页版心容器 开始 -->
+    <main class="container">
+        <!-- 网页导航 开始 -->
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+          <a class="navbar-brand" href="#">FROF</a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNav">
+              <ul class="navbar-nav">
+                {% if g.user %}
+                    <li class="nav-item">
+                        <a class="nav-link text-primary" href="#">{{ g.user['username'] }}</a>
+                    </li>
+                    <li class="nav-itemd">
+                        <a class="nav-link" href="{{ url_for('auth.logout') }}">注销</a>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('auth.register') }}">注册</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('auth.login') }}">登录</a>
+                    </li>
+                {% endif %}
+            </ul>
+          </div>
+        </nav>
+        <!-- 网页导航 结束 -->
+        <!-- 网页主要板块 开始 -->
+        <section>
+            <header>
+                {% block header %}{% endblock %}
+            </header>
+            {% for message in get_flashed_messages() %}
+                <div class="text-danger">{{ message }}</div>
+            {% endfor %}
+            {% block content %}{% endblock %}
+        </section>
+        <!-- 网页主要板块 结束 -->
+        <!-- 网页页脚区 开始 -->
+        <footer>
+            {% block footer %}{% endblock %}
+            <nav class="navbar navbar-dark fixed-bottom bg-light">
+                <ul class="navbar-nav">
+                    <li class="nav-item text-muted">Amnotgcs&copy;2022 All rights Reserved.</li>
+                </ul>
+            </nav>
+            <script src="{{ url_for('static', filename='js/jquery-3.6.0.js') }}"></script>
+            <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
+        </footer>
+        <!-- 网页页脚区 结束 -->
+    </main>
+    <!-- 网页版心容器 开始 -->
+</body>
+</html>
