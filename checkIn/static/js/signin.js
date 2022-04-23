@@ -54,7 +54,7 @@ function uploadImage(){
     //上传到后台。
     const uploadAjax = $.ajax({
         type: "post",
-        url: "/receiveImage/",  // 上传地址
+        url: "/face/receiveImage/",  // 上传地址
         data: JSON.stringify({"imgData": imgData}),  // 图片转为base64编码
         contentType: "json/application",
         timeout: 10000,  // 超时时间
