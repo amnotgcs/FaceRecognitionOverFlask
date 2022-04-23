@@ -1,16 +1,25 @@
+// 网页加载完成就执行
+window.onload = function () {
+    getMedia();
+    do_rec();
+    start();
+}
+
+
 // 释放摄像头资源
 function closeMedia() {
     const video = document.getElementById('video');
     if (!video.srcObject) return
-        let stream = video.srcObject
-        let tracks = stream.getTracks();
-        tracks.forEach(track => {
-            track.stop()
-        })
+    let stream = video.srcObject
+    let tracks = stream.getTracks();
+    tracks.forEach(track => {
+        track.stop()
+    })
 }
 
 //获得video摄像头区域
 let video = document.getElementById("video");
+
 // 申请调用摄像头
 function getMedia() {
     let constraints = {
@@ -45,12 +54,12 @@ function takePhoto() {
 const canvas = document.getElementById('canvas');
 const context = canvas.getContext('2d');
 
-function uploadImage(){
+function uploadImage() {
     canvas.width = 500;
     canvas.height = 500;
     context.drawImage(video, 0, 0, 500, 500);
     let imgData = canvas.toDataURL("image/jpg");
-    imgData = imgData.replace(/^data:image\/(png|jpg);base64,/,"")
+    imgData = imgData.replace(/^data:image\/(png|jpg);base64,/, "")
     //上传到后台。
     const uploadAjax = $.ajax({
         type: "post",
@@ -81,5 +90,30 @@ function start() {
     setInterval(
         'uploadImage()',
         1000,
-    )
+    );
+}
+
+function get_result() {
+    $.get(
+        '/face/get_rec_result',
+        function (data) {
+            console.log(data);
+            if (data.msg === 'ok') {
+                $("#rec_result_status").text("已检测到: ")
+                $("#rec_result_name").text(data.name);
+                $("#rec_result_score").text(data.rec_score);
+            } else {
+                $("#rec_result_status").text("请调整姿势")
+                $("#rec_result_name").text("");
+                $("#rec_result_score").text("");
+            }
+        });
+}
+
+function do_rec() {
+    $.get('/face/do_rec');
+    setInterval(
+        'get_result()',
+        1000,
+    );
 }

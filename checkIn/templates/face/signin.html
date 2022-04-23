@@ -3,13 +3,27 @@
 {% block title %}人脸比对系统{% endblock %}
 
 {% block content %}
-        <video id="video" width="500px" height="500px" autoplay="autoplay"></video>
-        <canvas id="canvas" width="500px" height="500px"></canvas>
-        <input type="button" title="开启摄像头" value="开启摄像头" onclick="getMedia()" />
-        <button id="snap" onclick="takePhoto()">拍照</button>
-        <button id="close" onclick="closeMedia()">关闭</button>
-        <button id="upload" onclick="uploadImage()">上传</button>
+    <div class="row">
+        <div class="col">
+            <video id="video" width="500px" height="500px" autoplay="autoplay"></video>
+        </div>
+        <div class="col">
+            <canvas id="canvas" width="500px" height="500px"></canvas>
+        </div>
+    </div>
+
+
+    <div class="d-none">
+        <button id="close" onclick="getMedia()">开启摄像头</button>
+        <button id="close" onclick="closeMedia()">关闭摄像头</button>
         <button id="start" onclick="start()">开始签到</button>
+    </div>
+
+    <h1 class="my-4">
+        <span class="text-muted" id="rec_result_status">NULL</span>
+        <span class="text-danger" id="rec_result_name">NULL</span>
+        <span class="text-danger" id="rec_result_score">0.00%</span>
+    </h1>
 {% endblock %}
 
 {% block footer %}
