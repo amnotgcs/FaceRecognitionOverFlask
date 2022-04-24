@@ -1,28 +1,30 @@
-from .data.data_pipe import de_preprocess, get_train_loader, get_val_data
-from .model import Backbone, Arcface, MobileFaceNet, Am_softmax, l2_norm
-from .verifacation import evaluate
-import torch
-from torch import optim
 import numpy as np
-from tqdm import tqdm
-from tensorboardX import SummaryWriter
+import torch
 from matplotlib import pyplot as plt
+from tensorboardX import SummaryWriter
+from torch import optim
+from tqdm import tqdm
+
+from .data.data_pipe import get_train_loader, get_val_data
+from .model import Backbone, Arcface, MobileFaceNet, l2_norm
+from .verifacation import evaluate
+
 plt.switch_backend('agg')
 from .utils import get_time, gen_plot, hflip_batch, separate_bn_paras
 from PIL import Image
 from torchvision import transforms as trans
 import math
-import bcolz
+
 
 class face_learner(object):
     def __init__(self, conf, inference=False):
-        print(conf)
+        # print(conf)
         if conf.use_mobilfacenet:
             self.model = MobileFaceNet(conf.embedding_size).to(conf.device)
-            print('MobileFaceNet model generated')
+            # print('MobileFaceNet model generated')
         else:
             self.model = Backbone(conf.net_depth, conf.drop_ratio, conf.net_mode).to(conf.device)
-            print('{}_{} model generated'.format(conf.net_mode, conf.net_depth))
+            # print('{}_{} model generated'.format(conf.net_mode, conf.net_depth))
         
         if not inference:
             self.milestones = conf.milestones
@@ -32,7 +34,7 @@ class face_learner(object):
             self.step = 0
             self.head = Arcface(embedding_size=conf.embedding_size, classnum=self.class_num).to(conf.device)
 
-            print('two model heads generated')
+            # print('two model heads generated')
 
             paras_only_bn, paras_wo_bn = separate_bn_paras(self.model)
             
@@ -47,10 +49,10 @@ class face_learner(object):
                                     {'params': paras_wo_bn + [self.head.kernel], 'weight_decay': 5e-4},
                                     {'params': paras_only_bn}
                                 ], lr = conf.lr, momentum = conf.momentum)
-            print(self.optimizer)
+            # print(self.optimizer)
 #             self.scheduler = optim.lr_scheduler.ReduceLROnPlateau(self.optimizer, patience=40, verbose=True)
 
-            print('optimizers generated')    
+            # print('optimizers generated')
             self.board_loss_every = len(self.loader)//100
             self.evaluate_every = len(self.loader)//10
             self.save_every = len(self.loader)//5

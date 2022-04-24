@@ -1,7 +1,6 @@
 // 网页加载完成就执行
 window.onload = function () {
     getMedia();
-    do_rec();
     start();
 }
 
@@ -68,8 +67,17 @@ function uploadImage() {
         contentType: "json/application",
         timeout: 10000,  // 超时时间
         async: true,
-        success: function (htmlVal) {
-            //成功后回调
+        success: function (data) {
+            console.log(data);
+            if (data.msg === 'ok') {
+                $("#rec_result_status").text("已检测到: ")
+                $("#rec_result_name").text(data.name);
+                $("#rec_result_score").text(data.rec_score);
+            } else {
+                $("#rec_result_status").text("请调整姿势")
+                $("#rec_result_name").text("");
+                $("#rec_result_score").text("");
+            }
         },
         error: function (data) {
         },
@@ -89,31 +97,6 @@ function uploadImage() {
 function start() {
     setInterval(
         'uploadImage()',
-        1000,
-    );
-}
-
-function get_result() {
-    $.get(
-        '/face/get_rec_result',
-        function (data) {
-            console.log(data);
-            if (data.msg === 'ok') {
-                $("#rec_result_status").text("已检测到: ")
-                $("#rec_result_name").text(data.name);
-                $("#rec_result_score").text(data.rec_score);
-            } else {
-                $("#rec_result_status").text("请调整姿势")
-                $("#rec_result_name").text("");
-                $("#rec_result_score").text("");
-            }
-        });
-}
-
-function do_rec() {
-    $.get('/face/do_rec');
-    setInterval(
-        'get_result()',
-        1000,
+        1000,  // 上传图片时间间隔
     );
 }

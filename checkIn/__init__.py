@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask
+from flask import Flask, redirect
 
 
 def create_app(test_config=None):
@@ -23,7 +23,7 @@ def create_app(test_config=None):
 
     @app.route('/')
     def hello():
-        return 'Hello.world.'
+        return redirect('/face')
 
     from checkIn import db
     db.init_app(app)

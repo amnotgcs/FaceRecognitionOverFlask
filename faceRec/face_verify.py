@@ -5,7 +5,7 @@ from pathlib import Path
 from multiprocessing import Process, Pipe,Value,Array
 import torch
 from config import get_config
-from mtcnn import MTCNN
+from mtcnn_pytorch import MTCNN
 from Learner import face_learner
 from utils import load_facebank, draw_box_name, prepare_facebank
 
